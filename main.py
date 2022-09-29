@@ -1,16 +1,28 @@
-# This is a sample Python script.
+import discord
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv  # take environment vars like API token from .env file
+import asyncio
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+env_path = join(dirname(__file__), '.env')
+load_dotenv(env_path)
+
+TOKEN = os.environ.get("TOKEN")
+intents = discord.Intents.default()
+intents.message_content = True
+
+client = discord.Client(intents=intents)
+
+@client.event
+async def on_ready():
+    print(f'Logged on as {client.user}!')  # print a message when the bot comes online
+
+@client.event
+async def on_message(message):
+    print(f'Message from {message.author}: {message.content}')  # let me know when the bot sees a message
+
+async def send(message):
+    await client.get_channel(1000612336593285174).send(message)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+client.run(TOKEN)
