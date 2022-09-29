@@ -4,6 +4,7 @@ from os.path import join, dirname
 from dotenv import load_dotenv  # take environment vars like API token from .env file
 import asyncio
 import random
+import time
 
 env_path = join(dirname(__file__), '.env')
 load_dotenv(env_path)
@@ -24,20 +25,16 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    if message.content.startswith('c!'):
+    if message.content.startswith('noam, '):
         await message.channel.send("Acknowledged.")
 
 
-async def send(message):
-    await bot.get_channel(1000612336593285174).send(message)
-
-
-@bot.slash_command(name="test", guild_ids=[1000612336593285171])
+@bot.slash_command(name="test", guild_ids=[1000612336593285171, 697911717467783258])
 async def test(ctx):
     await ctx.respond("ACK")
 
 
-@bot.slash_command(name="msguessr", guild_ids=[1000612336593285171])
+@bot.slash_command(name="msguessr", guild_ids=[1000612336593285171, 697911717467783258])
 async def msguessr(ctx):
     await ctx.respond(f"Acknowledged. Give me a second to prepare...")
     print("Command received. Indexing...")
@@ -49,8 +46,32 @@ async def msguessr(ctx):
     await ctx.send(f"Who sent this message?: {random_message.content}")
 
 
-@bot.slash_command(name="answer", guild_ids=[1000612336593285171])
+@bot.slash_command(name="answer", guild_ids=[1000612336593285171, 697911717467783258])
 async def answer(ctx):
     await ctx.respond(last_random_message.author)
+
+
+@bot.slash_command(name="version", guild_ids=[1000612336593285171, 697911717467783258])
+async def answer(ctx):
+    await ctx.respond("Noam Chompsky v0.1", ephemeral=True)
+
+
+@bot.slash_command(name="timestamp", guild_ids=[1000612336593285171, 697911717467783258])
+async def answer(ctx):
+    await ctx.respond(f"<t:{int(time.time())}:F>")
+
+
+@bot.slash_command(name="poke", guild_ids=[1000612336593285171, 697911717467783258])
+async def poke(ctx, userid):
+    user = await bot.fetch_user(userid)
+    await user.send(f"Ping! You're being poked!")
+    await ctx.respond(f"The user was poked in DMs.", ephemeral=True)
+
+
+@bot.slash_command(name="ping", guild_ids=[1000612336593285171, 697911717467783258], description="Returns latency time")
+async def ping(ctx):
+    await ctx.respond(f"Pong! Latency is {bot.latency}.")
+
+
 
 bot.run(TOKEN)
