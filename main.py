@@ -57,8 +57,11 @@ async def answer(ctx):
 
 
 @bot.slash_command(name="timestamp", guild_ids=[1000612336593285171, 697911717467783258])
-async def answer(ctx):
-    await ctx.respond(f"<t:{int(time.time())}:F>")
+async def answer(ctx, relative, epoch):
+   if relative:
+       await ctx.respond(f"<t:{epoch}:R>")
+   else:
+       await ctx.respond(f"<t:{epoch}:F")
 
 
 @bot.slash_command(name="poke", guild_ids=[1000612336593285171, 697911717467783258])
@@ -71,6 +74,11 @@ async def poke(ctx, userid):
 @bot.slash_command(name="ping", guild_ids=[1000612336593285171, 697911717467783258], description="Returns latency time")
 async def ping(ctx):
     await ctx.respond(f"Pong! Latency is {bot.latency}.")
+
+@bot.slash_command(name="embed", guild_ids=[1000612336593285171, 697911717467783258], description="Embed a Spotify song.")
+async def embed(ctx, song_url):
+    embed=discord.Embed(title="Test Embed", url=song_url, description="An embedded Spotify song", color=discord.Color.green())
+    await ctx.send(embed)
 
 
 
